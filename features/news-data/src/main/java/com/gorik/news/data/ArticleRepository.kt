@@ -32,7 +32,7 @@ class ArticleRepository(
 
     fun getAll(
 
-        mergeStrategy: MergeStrategy<RequestResult<List<Article>>>
+        mergeStrategy: MergeStrategy<RequestResult<List<Article>>> = RequestResponseMergeStrategy()
 
     ): Flow<RequestResult<List<Article>>> {
         val cachedArticles = getAllFromDB()
@@ -40,7 +40,7 @@ class ArticleRepository(
         return cachedArticles.combine(cachedArticles, mergeStrategy::merge)
             .flatMapLatest { result ->
                 if (result is RequestResult.Success) {
-                    db.articlesDao.getAll().map { articleDboList ->
+                    db.articlesDao.observerAll().map { articleDboList ->
                         articleDboList.map { articleDbo -> articleDbo.toArticle() }
                     }.map { RequestResult.Success(it) }
                 } else {
@@ -89,11 +89,11 @@ class ArticleRepository(
 
         return merge(dummyResult,articlesFromDB).map {
             reqresult:RequestResult<List<ArticleDBO>>->reqresult.map {
-                response->response.
+                response->response.map { it.toArticle() }
         }
         }
 
-    val
+
 
 }
 
