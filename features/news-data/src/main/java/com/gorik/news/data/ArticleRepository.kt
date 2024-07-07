@@ -7,8 +7,12 @@ import com.gorik.news.database.models.ArticleDBO
 import com.gorik.newsapi.NewsApi
 import com.gorik.newsapi.models.ArticleDTO
 import com.gorik.newsapi.models.ResponseDTO
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
@@ -20,8 +24,12 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 class ArticleRepository(
@@ -81,40 +89,61 @@ class ArticleRepository(
     private fun getAllFromDB(): Flow<RequestResult<List<Article>>> {
 
         val articlesFromDB = db.articlesDao::getAll.asFlow()
-            .map { articles-> RequestResult.Success(articles)}
-            .catch { error-> RequestResult.Error<List<ArticleDBO>>(error = error) }
+            .map { articles -> RequestResult.Success(articles) }
+            .catch { error -> RequestResult.Error<List<ArticleDBO>>(error = error) }
 
 
         val dummyResult = flowOf<RequestResult<List<ArticleDBO>>>(RequestResult.InProgress())
 
-        return merge(dummyResult,articlesFromDB).map {
-            reqresult:RequestResult<List<ArticleDBO>>->reqresult.map {
-                response->response.map { it.toArticle() }
+        return merge(
+            dummyResult,
+            articlesFromDB
+        ).map { reqresult: RequestResult<List<ArticleDBO>> ->
+            reqresult.map { response ->
+                response.map { it.toArticle() }
+            }
         }
-        }
 
 
-
-}
-
-
-
-suspend fun main() {
-
-    val bee =Bee()
-
-    val a = bee::pri.asFlow()
-
-    a.collect(){
-        println(it)
     }
 
 
 }
 
 
-class Bee(){
-    fun pri() = 123
+fun main() {
+    runBlocking {
+
+        val job = launch { }
+        val state = "a b c d".split(" ").asFlow()
+
+
+            .onEach { stringa ->
+                delay(1000)
+                println("...emitting...")
+
+            }
+            .stateIn(CoroutineScope(job))
+            .onCompletion { println("---END---") }
+        val sub1 = launch {
+
+            state.collect() {
+                delay(2000)
+                println("Gotta from state -> $it")
+            }
+
+        }
+        val sub2 = launch {
+
+            state.collect() {
+                println("Gotta from state(2) -> $it")
+            }
+
+        }
+        delay(1000)
+//        job.cancel()
+
+    }
 }
 
 
