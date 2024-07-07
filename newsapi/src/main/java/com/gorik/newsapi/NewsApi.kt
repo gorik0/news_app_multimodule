@@ -1,9 +1,9 @@
 package com.gorik.newsapi
 
 import androidx.annotation.IntRange
-import com.gorik.newsapi.models.Article
+import com.gorik.newsapi.models.ArticleDTO
 import com.gorik.newsapi.models.Language
-import com.gorik.newsapi.models.Response
+import com.gorik.newsapi.models.ResponseDTO
 import com.gorik.newsapi.models.SortBy
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.skydoves.retrofit.adapters.result.ResultCallAdapterFactory
@@ -22,9 +22,9 @@ import java.util.Date
 
 interface NewsApi {
 
-        /**
-         * Api Details [here](https://newsapi.org/docs/endpoints/everything#sources)
-        * */
+    /**
+     * Api Details [here](https://newsapi.org/docs/endpoints/everything#sources)
+     * */
 
     @GET("/everything")
     suspend fun everything(
@@ -37,12 +37,19 @@ interface NewsApi {
         @Query("page") @IntRange(from = 1) page: Int = 1,
 
 
-        ):Result<Response<Article>>
+        ): Result<ResponseDTO<ArticleDTO>>
 }
 
 
-fun  NewsApi(baseUrl: String, okHttpClient: OkHttpClient? = null, json: Json = Json):NewsApi{
-    val retrofit = retrofit(baseUrl, okHttpClient,json)
+fun NewsApi(
+    baseUrl: String,
+    okHttpClient: OkHttpClient? = null,
+    json: Json = Json,
+    apiKey: String,
+): NewsApi {
+
+
+    val retrofit = retrofit(baseUrl, okHttpClient, json,apiKey)
     return retrofit.create()
 
 }
@@ -50,13 +57,19 @@ fun  NewsApi(baseUrl: String, okHttpClient: OkHttpClient? = null, json: Json = J
 private fun retrofit(
     baseUrl: String,
     okHttpClient: OkHttpClient?,
-    json: Json ,
+    json: Json,
+    apiKey: String,
 ): Retrofit {
-    val jsonConverterFatcory = json.asConverterFactory(MediaType.get("application/json"))
+    val okHttpClientModified = (okHttpClient?.newBuilder() ?: OkHttpClient.Builder())
+        .addInterceptor(CustomApiKeyInterceptor(apiKey))
+        .build()
+
+    val jsonConverterFactory = json.asConverterFactory(MediaType.get("application/json"))
     val retrofit = Retrofit.Builder()
         .baseUrl(baseUrl)
         .addCallAdapterFactory(ResultCallAdapterFactory.create())
-        .addConverterFactory(jsonConverterFatcory)
+        .addConverterFactory(jsonConverterFactory)
+        .client(okHttpClientModified)
         .run { if (okHttpClient != null) client(okHttpClient) else this }
         .build()
     return retrofit

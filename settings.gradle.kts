@@ -22,3 +22,6 @@ dependencyResolutionManagement {
 rootProject.name = "NewMulti"
 include(":app")
 include(":newsapi")
+include(":database")
+include(":features:news-main")
+include(":features:news-data")
