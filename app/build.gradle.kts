@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
+
+    alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.kapt)
 //
 }
 
@@ -20,7 +23,12 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+
+        buildConfigField("String","NEWS_API_KEY","\"\"")
+        buildConfigField("String","NEWS_API_BASE_URL","\"\"")
     }
+
 
     buildTypes {
         release {
@@ -39,6 +47,7 @@ android {
         jvmTarget = "1.8"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
     }
     composeCompiler {
@@ -63,7 +72,15 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.junit.ktx)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.junit.junit)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
+
+
+    implementation(project(":newsapi"))
+    implementation(project(":database"))
+    implementation(project(":news-data"))
+
 }

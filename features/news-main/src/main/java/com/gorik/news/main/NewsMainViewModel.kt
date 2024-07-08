@@ -4,18 +4,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gorik.news.data.RequestResult
 import com.gorik.news.main.models.Article
+import dagger.Provides
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
+import javax.inject.Provider
 
-internal class NewsMainViewModel(
-    val getAllArticleUseCase: GetAllArticleUseCase
+
+@HiltViewModel
+internal class NewsMainViewModel @Inject constructor(
+    val getAllArticleUseCase: Provider<GetAllArticleUseCase>
 ) : ViewModel() {
 
-    val state:StateFlow<State> = getAllArticleUseCase()
+    val state:StateFlow<State> = getAllArticleUseCase.get().invoke()
         .map { it.toState()}
         .stateIn(viewModelScope, SharingStarted.Lazily,State.None)
 
@@ -23,7 +29,7 @@ internal class NewsMainViewModel(
 
 
 
-private fun RequestResult<List<com.gorik.news.data.models.Article>>.toState(): State {
+private fun RequestResult<List<Article>>.toState(): State {
     return when (this) {
         is RequestResult.Success -> {
             State.Success(articles = data)
@@ -38,6 +44,7 @@ private fun RequestResult<List<com.gorik.news.data.models.Article>>.toState(): S
         }
     }
 }
+
 
 sealed class State {
 

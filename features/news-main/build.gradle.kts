@@ -2,6 +2,11 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.compose.compiler)
+
+
+    alias(libs.plugins.dagger.hilt.android)
+    alias(libs.plugins.kapt)
+
 }
 
 android {
@@ -59,6 +64,11 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.compose)
 
     implementation(libs.kotlinx.coroutines.android)
-    implementation(project(":features:news-data"))
+    implementation(project(":news-data"))
+
+
+    implementation(libs.dagger.hilt.android)
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.compiler)
 
 }

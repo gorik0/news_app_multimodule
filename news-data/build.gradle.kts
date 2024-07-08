@@ -41,4 +41,7 @@ implementation(libs.kotlinx.coroutines.android)
     implementation(project(":newsapi"))
     implementation(project(":database"))
     implementation(libs.protolite.well.known.types)
+
+
+    implementation(libs.javax.inject)
 }

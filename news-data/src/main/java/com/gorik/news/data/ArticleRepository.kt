@@ -30,9 +30,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
 
-class ArticleRepository(
+class ArticleRepository @Inject constructor(
     val api: NewsApi,
     val db: NewsDatabase
 ) {
@@ -142,6 +143,7 @@ fun main() {
         }
         delay(1000)
 //        job.cancel()
+
 
     }
 }

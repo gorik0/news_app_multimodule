@@ -22,6 +22,10 @@ ksp = "2.0.0-1.0.22"
 junitJunit = "4.12"
 junitKtx = "1.2.1"
 protoliteWellKnownTypes = "18.0.0"
+dagger = "2.51.1"
+javax-inject = "1"
+
+
 
 [libraries]
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
@@ -55,10 +59,17 @@ retrofit-adapters-result = { module = "com.github.skydoves:retrofit-adapters-res
 retrofit2-kotlinx-serialization-converter = { module = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter", version.ref = "retrofit2KotlinxSerializationConverter" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 protolite-well-known-types = { group = "com.google.firebase", name = "protolite-well-known-types", version.ref = "protoliteWellKnownTypes" }
 
+
+dagger-hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "dagger" }
+dagger-hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "dagger" }
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
+dagger-main = { module = "com.google.dagger:dagger", version.ref = "dagger" }
+
+# На стриме использовал Jakarta Inject, но оно не будет работать с Dagger. Надо использовать JavaX Inject
+javax-inject = { module = "javax.inject:javax.inject", version.ref = "javax-inject" }
 
 
 
@@ -73,3 +84,6 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
+
+dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger" }
+kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
