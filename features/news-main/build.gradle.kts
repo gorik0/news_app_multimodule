@@ -70,6 +70,8 @@ dependencies {
 
     implementation(libs.dagger.hilt.android)
     implementation(libs.dagger.hilt.android)
+    implementation(libs.coil.core)
+    implementation(libs.coil.compose)
     kapt(libs.dagger.hilt.compiler)
 
 }
