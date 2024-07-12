@@ -102,8 +102,8 @@ private fun Articles(articles: List<ArticleUi>) {
 private fun Article(article: ArticleUi) {
 
     Column(Modifier.padding(8.dp)) {
-        Text(text = article.title, style = MaterialTheme.typography.headlineLarge, maxLines = 1)
+        Text(text = article.title?:"NO_TTITLE", style = MaterialTheme.typography.headlineLarge, maxLines = 1)
         Spacer(modifier = Modifier.size(20.dp))
-        Text(text = article.description, style = MaterialTheme.typography.bodyMedium, maxLines = 3)
+        Text(text = article.description?:"NO DESCRIPTION", style = MaterialTheme.typography.bodyMedium, maxLines = 3)
     }
 }

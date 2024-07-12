@@ -24,7 +24,7 @@ internal fun ArticleDBO.toArticle(): Article {
 internal fun ArticleDTO.toArticle(): Article {
     return Article(
         source = this.source.toSource(),
-        author = this.author,
+        author = this.author?:"___",
         title = this.title,
         description = this.description,
         url = this.url,
@@ -37,7 +37,7 @@ internal fun ArticleDTO.toArticle(): Article {
 internal fun ArticleDTO.toArticleDBO() :ArticleDBO{
     return ArticleDBO(
         source = this.source.toSourceDBO(),
-        author = this.author,
+        author = this.author?:"__",
         title = this.title,
         description = this.description,
         url = this.url,

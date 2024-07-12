@@ -22,7 +22,15 @@ internal class GetAllArticleUseCase @Inject constructor(
 
  }
     private fun DataArticle.toUIarticle():ArticleUi{
-        TODO()
+        return ArticleUi(
+
+
+            id =this.cacheId,
+            title =this.title,
+            description =this.description,
+            imageUrl =this.urlToImage,
+            url =this.url,
+        )
     }
 }
 
