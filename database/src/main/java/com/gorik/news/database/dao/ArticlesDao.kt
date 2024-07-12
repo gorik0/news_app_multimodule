@@ -13,7 +13,7 @@ interface ArticlesDao {
 
 
     @Query("SELECT * FROM articles")
-    fun getAll(): List<ArticleDBO>
+    suspend fun getAll(): List<ArticleDBO>
 
   @Query("SELECT * FROM articles")
     fun observerAll(): Flow<List<ArticleDBO>>

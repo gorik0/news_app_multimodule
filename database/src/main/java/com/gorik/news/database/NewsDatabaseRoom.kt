@@ -26,10 +26,22 @@ abstract class  NewsDatabaseRoom :RoomDatabase(){
 
 
 fun NewNewsDatabase(ctx: Context):NewsDatabase{
+    val newsRoomDatabase = Room.databaseBuilder(
+        checkNotNull(ctx.applicationContext),
+        NewsDatabaseRoom::class.java,
+        "news"
+    ).build()
+    return NewsDatabase(newsRoomDatabase)
 
-    val db = Room.databaseBuilder(ctx,NewsDatabaseRoom::class.java,"news").build()
-    return NewsDatabase(db)
 
 
+}
 
+fun NewsDatabase(applicationContext: Context): NewsDatabase {
+    val newsRoomDatabase = Room.databaseBuilder(
+        checkNotNull(applicationContext.applicationContext),
+        NewsDatabaseRoom::class.java,
+        "news"
+    ).build()
+    return NewsDatabase(newsRoomDatabase)
 }

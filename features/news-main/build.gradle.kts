@@ -65,6 +65,7 @@ dependencies {
 
     implementation(libs.kotlinx.coroutines.android)
     implementation(project(":news-data"))
+    implementation(project(":news-ui"))
 
 
     implementation(libs.dagger.hilt.android)

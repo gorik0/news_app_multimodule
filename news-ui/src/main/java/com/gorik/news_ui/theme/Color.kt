@@ -1,4 +1,4 @@
-package com.gorik.newmulti.ui.theme
+package com.gorik.news_ui.theme
 
 import androidx.compose.ui.graphics.Color
 

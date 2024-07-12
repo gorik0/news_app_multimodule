@@ -27,7 +27,7 @@ interface NewsApi {
      * Api Details [here](https://newsapi.org/docs/endpoints/everything#sources)
      * */
 
-    @GET("/everything")
+    @GET("everything")
     suspend fun everything(
         @Query("q") q: String? = null,
         @Query("from") from: Date? = null,
@@ -71,7 +71,6 @@ private fun retrofit(
         .addCallAdapterFactory(ResultCallAdapterFactory.create())
         .addConverterFactory(jsonConverterFactory)
         .client(okHttpClientModified)
-        .run { if (okHttpClient != null) client(okHttpClient) else this }
         .build()
     return retrofit
 }

@@ -25,14 +25,14 @@ android {
         }
 
 
-        buildConfigField("String","NEWS_API_KEY","\"\"")
-        buildConfigField("String","NEWS_API_BASE_URL","\"\"")
+        buildConfigField("String","NEWS_API_KEY","\"155ae65d7264461397c901103488c01e\"")
+        buildConfigField("String","NEWS_API_BASE_URL","\"https://newsapi.org/v2/\"")
     }
 
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled =    false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -76,11 +76,15 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation(libs.dagger.hilt.android)
+    debugImplementation(libs.okhttpLoggingIntercpetor)
     kapt(libs.dagger.hilt.compiler)
 
 
     implementation(project(":newsapi"))
     implementation(project(":database"))
     implementation(project(":news-data"))
+    implementation(project(":news-ui"))
+    implementation(project(":features:news-main"))
+    implementation(project(":news-common"))
 
 }

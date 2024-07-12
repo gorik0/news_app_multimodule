@@ -5,12 +5,15 @@ import okhttp3.Response
 
 class CustomApiKeyInterceptor(val apiKey: String) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        return chain.proceed(
-            chain.request().newBuilder()
-                .addHeader("X-Api-Key",apiKey)
-                .build()
-
-        )
+        val request = chain.request().newBuilder()
+            .url(
+                chain.request().url.newBuilder()
+                    .addQueryParameter("apiKey", apiKey)
+                    .build()
+            )
+            .build()
+        println("RIOGORIO   :::::  "+chain.request().url)
+        return chain.proceed(request)
     }
 
 

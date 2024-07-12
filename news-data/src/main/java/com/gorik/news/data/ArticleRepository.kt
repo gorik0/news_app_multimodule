@@ -4,6 +4,7 @@ import com.google.protobuf.Internal.ListAdapter
 import com.gorik.news.data.models.Article
 import com.gorik.news.database.NewsDatabase
 import com.gorik.news.database.models.ArticleDBO
+import com.gorik.news_common.Logger
 import com.gorik.newsapi.NewsApi
 import com.gorik.newsapi.models.ArticleDTO
 import com.gorik.newsapi.models.ResponseDTO
@@ -30,23 +31,27 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import okhttp3.internal.cacheGet
+import retrofit2.http.Query
 import javax.inject.Inject
 
 
 class ArticleRepository @Inject constructor(
     val api: NewsApi,
-    val db: NewsDatabase
+    val db: NewsDatabase,
+    val logger: Logger
 ) {
 
 
     fun getAll(
-
+query: String,
         mergeStrategy: MergeStrategy<RequestResult<List<Article>>> = RequestResponseMergeStrategy()
 
     ): Flow<RequestResult<List<Article>>> {
+
         val cachedArticles = getAllFromDB()
-        val remoteArtilces = getAllFromServer()
-        return cachedArticles.combine(cachedArticles, mergeStrategy::merge)
+        val remoteArtilces = getAllFromServer(query)
+        return cachedArticles.combine(remoteArtilces, mergeStrategy::merge)
             .flatMapLatest { result ->
                 if (result is RequestResult.Success) {
                     db.articlesDao.observerAll().map { articleDboList ->
@@ -63,9 +68,12 @@ class ArticleRepository @Inject constructor(
 
     //    ::: GET api articles flow, if it's result is SUCCESS ->   cache it in DB
 // ::: FIRST we have to get qpi-request, then merge it with "inprogress " result and map from articlesDTO to clean article
-    private fun getAllFromServer(): Flow<RequestResult<List<Article>>> {
-        val apiRequest = flow { emit(api.everything()) }
+    private fun getAllFromServer(query:String): Flow<RequestResult<List<Article>>> {
+        val apiRequest = flow { emit(api.everything(query)) }
             .onEach { result -> if (result.isSuccess) makeArticlesInCache(result.getOrThrow().articles) }
+            .onEach {  result-> if (result.isFailure){
+                logger.e(LOG_TAG,"Error geteting dat from server .Cause  =${result.exceptionOrNull()}")
+            } }
             .map { resultArticlesDTO -> resultArticlesDTO.toRequestResult() }
 
         val dummyResult = flowOf<RequestResult<ResponseDTO<ArticleDTO>>>(RequestResult.InProgress())
@@ -88,10 +96,14 @@ class ArticleRepository @Inject constructor(
     }
 
     private fun getAllFromDB(): Flow<RequestResult<List<Article>>> {
-
+println("RIOGORIO :::: "+Thread.currentThread().name)
         val articlesFromDB = db.articlesDao::getAll.asFlow()
-            .map { articles -> RequestResult.Success(articles) }
-            .catch { error -> RequestResult.Error<List<ArticleDBO>>(error = error) }
+            .map<List<ArticleDBO>,RequestResult<List<ArticleDBO>>>{RequestResult.Success(it)  }
+            .catch {
+
+                logger.e(LOG_TAG,"Errror getting from db. Cause ${it}")
+                emit(RequestResult.Error(error = it))
+            }
 
 
         val dummyResult = flowOf<RequestResult<List<ArticleDBO>>>(RequestResult.InProgress())
@@ -99,13 +111,17 @@ class ArticleRepository @Inject constructor(
         return merge(
             dummyResult,
             articlesFromDB
-        ).map { reqresult: RequestResult<List<ArticleDBO>> ->
+        ).map { reqresult ->
             reqresult.map { response ->
                 response.map { it.toArticle() }
             }
         }
 
 
+    }
+
+    private companion object{
+        const val LOG_TAG = "Article Repo"
     }
 
 

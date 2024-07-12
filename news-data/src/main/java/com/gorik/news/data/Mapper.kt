@@ -11,8 +11,6 @@ import com.gorik.newsapi.models.SourceDTO
 internal fun ArticleDBO.toArticle(): Article {
     return Article(
         source = this.source.toSource(),
-                id = this.id.toString(),
-                name = this.name,
                 author = this.author,
                 title = this.title,
                 description = this.description,
@@ -26,8 +24,6 @@ internal fun ArticleDBO.toArticle(): Article {
 internal fun ArticleDTO.toArticle(): Article {
     return Article(
         source = this.source.toSource(),
-        id = this.id,
-        name = this.name,
         author = this.author,
         title = this.title,
         description = this.description,
@@ -41,8 +37,6 @@ internal fun ArticleDTO.toArticle(): Article {
 internal fun ArticleDTO.toArticleDBO() :ArticleDBO{
     return ArticleDBO(
         source = this.source.toSourceDBO(),
-        id = this.id.toLong(),
-        name = this.name,
         author = this.author,
         title = this.title,
         description = this.description,
@@ -58,8 +52,8 @@ internal  fun SourceDBO.toSource():Source{
     return Source(id = this.id,name = this.name)
 }
 internal  fun SourceDTO.toSource():Source{
-    return Source(id = this.id,name = this.name)
+    return Source(id = this.id?:name,name = this.name)
 }
 internal  fun SourceDTO.toSourceDBO():SourceDBO{
-    return SourceDBO(id = this.id,name = this.name)
+    return SourceDBO(id = this.id?:name,name = this.name)
 }

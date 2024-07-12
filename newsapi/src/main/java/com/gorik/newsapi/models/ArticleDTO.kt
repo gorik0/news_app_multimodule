@@ -26,13 +26,11 @@ data class ArticleDTO (
 
 
     @SerialName("source") val source:SourceDTO,
-    @SerialName("id") val id:String,
-    @SerialName("name") val name:String,
     @SerialName("author") val author:String,
     @SerialName("title") val title:String,
     @SerialName("description") val description:String,
     @SerialName("url") val url:String,
-    @SerialName("urlToImage") val urlToImage:String,
+    @SerialName("urlToImage") val urlToImage:String?,
     @SerialName("publishedAt") @Serializable(with = DateSerializerCustom::class) val publishedAt: Date,
     @SerialName("content") val content:String,
 

@@ -40,6 +40,7 @@ implementation(libs.kotlinx.coroutines.android)
 
     implementation(project(":newsapi"))
     implementation(project(":database"))
+    implementation(project(":news-common"))
     implementation(libs.protolite.well.known.types)
 
 

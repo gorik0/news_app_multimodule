@@ -2,22 +2,16 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "734b9c66e2328fd81a88f0683c296ebe",
+    "identityHash": "a9932ee60049f61cd7efacd696e6a6c3",
     "entities": [
       {
         "tableName": "articles",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `author` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `url` TEXT NOT NULL, `urlToImage` TEXT NOT NULL, `publishedAt` TEXT NOT NULL, `content` TEXT NOT NULL, `source.id` TEXT NOT NULL, `source.name` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `author` TEXT NOT NULL, `title` TEXT NOT NULL, `description` TEXT NOT NULL, `url` TEXT NOT NULL, `urlToImage` TEXT, `publishedAt` TEXT NOT NULL, `content` TEXT NOT NULL, `sourceid` TEXT NOT NULL, `sourcename` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -48,7 +42,7 @@
             "fieldPath": "urlToImage",
             "columnName": "urlToImage",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "publishedAt",
@@ -64,13 +58,13 @@
           },
           {
             "fieldPath": "source.id",
-            "columnName": "source.id",
+            "columnName": "sourceid",
             "affinity": "TEXT",
             "notNull": true
           },
           {
             "fieldPath": "source.name",
-            "columnName": "source.name",
+            "columnName": "sourcename",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -88,7 +82,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '734b9c66e2328fd81a88f0683c296ebe')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a9932ee60049f61cd7efacd696e6a6c3')"
     ]
   }
 }
